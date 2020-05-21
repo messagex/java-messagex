@@ -3,38 +3,118 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.messagex</groupId>
   <artifactId>messagex</artifactId>
-  <packaging>maven-plugin</packaging>
-  <version>1.0</version>
+  <packaging>jar</packaging>
+  <version>1.0.0-SNAPSHOT</version>
   <name>MessageX</name>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/messagex/java-messagex</url>
+  <scm>
+    <connection>scm:git:https://github.com/messagex/java-messagex.git</connection>
+    <developerConnection>scm:git:https://github.com/messagex/java-messagex.git</developerConnection>
+    <url>git@github.com/messagex/java-messagex.git</url>
+    <tag>1.0.0</tag>
+  </scm>
+  <!--License-->
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
+  <!-- Developers -->
+  <developers>
+    <developer>
+      <name>Saurabh Raje</name>
+      <email>saurabhraje1124@gmail.com</email>
+      <organization>Messagex Pty. Ltd.</organization>
+      <organizationUrl>https://messagex.com</organizationUrl>
+    </developer>
+  </developers>
+  <!--Properties-->
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
   <dependencies>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-api</artifactId>
-      <version>2.0</version>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugin-tools/maven-plugin-annotations -->
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
     <dependency>
-      <groupId>org.apache.maven.plugin-tools</groupId>
-      <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.6.0</version>
-      <scope>provided</scope>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.11.0</version>
     </dependency>
   </dependencies>
 
   <!-- Build Spec -->
   <build>
     <plugins>
+      <!-- Maven Jar plugin -->
+      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
       <plugin>
-        <groupId>com.messagex</groupId>
-        <artifactId>messagex</artifactId>
-        <version>1.0</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.messagex.main.Main</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <!--Maven Release Plugin-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-scm-plugin</artifactId>
+            <version>1.8.1</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <pushChanges>false</pushChanges>
+          <checkModificationExcludes>
+            <checkModificationExclude>pom.xml</checkModificationExclude>
+          </checkModificationExcludes>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <goals>deploy</goals>
+          <releaseProfiles>release</releaseProfiles>
+        </configuration>
+      </plugin>
+      <!--Source Plugin-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
