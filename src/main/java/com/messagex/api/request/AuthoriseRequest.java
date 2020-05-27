@@ -1,9 +1,20 @@
 package com.messagex.api.request;
 
+import com.messagex.config.MessagexOptions;
+
 public class AuthoriseRequest {
 
   private String apiKey;
-  private String apiiSecret;
+  private String apiSecret;
+
+  public AuthoriseRequest() {
+
+  }
+
+  public AuthoriseRequest(MessagexOptions messagexOptions) {
+    this.apiKey = messagexOptions.getApiKey();
+    this.apiSecret = messagexOptions.getApiSecret();
+  }
 
   public String getApiKey() {
     return apiKey;
@@ -13,11 +24,11 @@ public class AuthoriseRequest {
     this.apiKey = apiKey;
   }
 
-  public String getApiiSecret() {
-    return apiiSecret;
+  public String getApiSecret() {
+    return apiSecret;
   }
 
-  public void setApiiSecret(String apiiSecret) {
-    this.apiiSecret = apiiSecret;
+  public void setApiSecret(String apiSecret) {
+    this.apiSecret = apiSecret;
   }
 }

@@ -6,6 +6,8 @@ public class Attachment {
   private String mimeType;
   private String filename;
 
+  public Attachment() {}
+
   public String getContentEncoded() {
     return contentEncoded;
   }

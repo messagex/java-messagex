@@ -15,6 +15,8 @@ public class Mail {
   private Content[] content;
   private Analytics analytics;
 
+  public Mail() {}
+
   public String getContactGroupId() {
     return contactGroupId;
   }

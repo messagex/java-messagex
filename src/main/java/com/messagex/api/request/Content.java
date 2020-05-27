@@ -4,6 +4,8 @@ public class Content {
   private String type;
   private String body;
 
+  public Content() {}
+
   public String getType() {
     return type;
   }

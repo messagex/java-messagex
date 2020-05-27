@@ -5,6 +5,8 @@ public class Header {
   private String name;
   private String value;
 
+  public Header() {}
+
   public String getName() {
     return name;
   }

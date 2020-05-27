@@ -10,6 +10,8 @@ public class AuthoriseResponse {
   private Long createdAtEpoch;
   private Long updatedAtEpoch;
 
+  public AuthoriseResponse() {}
+
   public Long getId() {
     return id;
   }

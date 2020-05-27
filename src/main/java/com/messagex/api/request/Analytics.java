@@ -7,6 +7,8 @@ public class Analytics {
   private String utm_term;
   private String utm_content;
   private String utm_campaign;
+  
+  public Analytics() {}
 
   public String getUtm_source() {
     return utm_source;
