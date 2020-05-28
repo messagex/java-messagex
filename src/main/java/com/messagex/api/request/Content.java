@@ -21,4 +21,13 @@ public class Content {
   public void setBody(String body) {
     this.body = body;
   }
+
+  public Boolean validate() {
+    if (null != this.type && !this.type.isEmpty()) {
+      if (null != this.body && !this.body.isEmpty()) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

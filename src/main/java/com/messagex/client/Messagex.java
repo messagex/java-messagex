@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.messagex.api.request.AuthoriseRequest;
 import com.messagex.api.request.Mail;
 import com.messagex.api.response.AuthoriseResponse;
+import com.messagex.api.response.MailSendResponse;
 import com.messagex.config.MessagexOptions;
+import com.messagex.exceptions.MailSendException;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -24,7 +26,6 @@ public class Messagex {
   private static ObjectMapper mapper = new ObjectMapper();
 
   private MessagexOptions messagexOptions;
-  private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
   static {
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -35,6 +36,7 @@ public class Messagex {
   }
 
   public AuthoriseResponse authenticate() throws IOException, AuthenticationException {
+    CloseableHttpClient httpClient = HttpClients.createDefault();
     AuthoriseRequest authoriseRequest = new AuthoriseRequest(messagexOptions);
     String authoriseRequestStr = new String();
     try {
@@ -63,11 +65,47 @@ public class Messagex {
       }
     } catch (UnsupportedEncodingException ex) {
       throw ex;
+    } finally {
+      httpClient.close();
     }
   }
 
-  public void sendMail(Mail mail) {
-    
+  public MailSendResponse sendMail(String bearerToken, Mail mail) throws MailSendException, IOException {
+    if (null != bearerToken && !bearerToken.isEmpty()) {
+      CloseableHttpClient httpClient = HttpClients.createDefault();
+      try {
+        mail.validate();
+        String mailSendRequestStr = new String();
+        try {
+          mailSendRequestStr = mapper.writeValueAsString(mail);
+        } catch (JsonProcessingException ex) {
+          throw ex;
+        }
+        HttpPost httpRequest = new HttpPost(messagexOptions.getBaseUrl() + "/api/mail/send");
+        httpRequest.setHeader("Content-Type", "application/json");
+        httpRequest.setHeader("Authorization", "Bearer " + bearerToken);
+        try {
+          httpRequest.setEntity(new StringEntity(mailSendRequestStr));
+          try {
+            CloseableHttpResponse httpResponse = httpClient.execute(httpRequest);
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+              return new MailSendResponse(true, "Email was sent successfully.");
+            } else {
+              throw new MailSendException(EntityUtils.toString(httpResponse.getEntity()));
+            }
+          } catch (ClientProtocolException ex) {
+            throw ex;
+          }
+        } catch (UnsupportedEncodingException ex) {
+          throw ex;
+        }
+      } catch (MailSendException ex) {
+        throw ex;
+      } finally {
+        httpClient.close();
+      }
+    }
+    throw new MailSendException("bearerToken is mandatory for sending emails");
   }
 
 }

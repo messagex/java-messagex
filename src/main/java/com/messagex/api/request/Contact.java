@@ -22,4 +22,11 @@ public class Contact {
   public void setAddress(String address) {
     this.address = address;
   }
+
+  public Boolean validate() {
+    if (null != this.address && !this.address.isEmpty()) {
+      return true;
+    }
+    return false;
+  }
 }

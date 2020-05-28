@@ -31,4 +31,15 @@ public class Attachment {
   public void setFilename(String filename) {
     this.filename = filename;
   }
+
+  public Boolean validate() {
+    if (null != this.contentEncoded && !this.contentEncoded.isEmpty()) {
+      if (null != this.mimeType && !this.mimeType.isEmpty()) {
+        if (null != this.filename && !this.filename.isEmpty()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }

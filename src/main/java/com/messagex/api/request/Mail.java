@@ -1,5 +1,11 @@
 package com.messagex.api.request;
 
+import com.messagex.exceptions.InvalidAttachmentException;
+import com.messagex.exceptions.InvalidContactException;
+import com.messagex.exceptions.InvalidContentException;
+import com.messagex.exceptions.InvalidHeaderException;
+import com.messagex.exceptions.MailSendException;
+
 public class Mail {
 
   private String contactGroupId;
@@ -111,5 +117,76 @@ public class Mail {
 
   public void setAnalytics(Analytics analytics) {
     this.analytics = analytics;
+  }
+
+  /**
+   * Validator function
+   * Compulsory properties:
+   * from.address
+   * to.address
+   * subject
+   * replyTo.address
+   * content
+   */
+  public Boolean validate() throws MailSendException {
+    if (null == this.from || !this.from.validate()) {
+      throw new InvalidContactException("The `from` email is invalid");
+    }
+    if (null != this.to && this.to.length >= 1) {
+      for (Contact toContact : this.to) {
+        if (!toContact.validate()) {
+          throw new InvalidContactException("One or more `to` addresses are invalid");
+        }
+      }
+    } else {
+      throw new InvalidContactException("One or more `to` addresses are invalid");
+    }
+    //Validate CC and BCC if they are present.
+    if (null != this.cc && this.cc.length >=1) {
+      for (Contact ccContact : this.cc) {
+        if (!ccContact.validate()) {
+          throw new InvalidContactException("One or more `cc` addresses are invalid");
+        }
+      }
+    }
+    if (null != this.bcc && this.bcc.length >=1) {
+      for (Contact bccContact : this.bcc) {
+        if (!bccContact.validate()) {
+          throw new InvalidContactException("One or more `bcc` addresses are invalid");
+        }
+      }
+    }
+
+    if (null == this.subject || this.subject.isEmpty()) {
+      throw new MailSendException("Subject cannot be empty");
+    }
+
+    if (null != this.content && this.content.length >= 1) {
+      for (Content cont: this.content) {
+        if (!cont.validate()) {
+          throw new InvalidContentException("One or more `content` schemas are invalid");
+        }
+      }
+    } else {
+      throw new MailSendException("Content cannot be empty");
+    }
+
+    // Validate attachments and headers if present.
+    if (null != this.attachments && this.attachments.length >= 1) {
+      for (Attachment att: attachments) {
+        if (!att.validate()) {
+          throw new InvalidAttachmentException("One or more `attachment` schemas are invalid");
+        }
+      }
+    }
+
+    if (null != this.headers && this.headers.length >= 1) {
+      for (Header h: headers) {
+        if (!h.validate()) {
+          throw new InvalidHeaderException("One or more `header` schemas are invalid");
+        }
+      }
+    }
+    return true;
   }
 }

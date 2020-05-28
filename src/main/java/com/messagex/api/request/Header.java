@@ -22,4 +22,13 @@ public class Header {
   public void setValue(String value) {
     this.value = value;
   }
+
+  public Boolean validate() {
+    if (null != this.name && !this.name.isEmpty()) {
+      if (null != this.value && !this.value.isEmpty()) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
