@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.messagex.api.request.AuthoriseRequest;
 import com.messagex.api.request.Mail;
 import com.messagex.api.response.AuthoriseResponse;
@@ -52,8 +53,10 @@ public class Messagex {
       try {
         CloseableHttpResponse httpResponse = httpClient.execute(httpRequest);
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
-          JsonNode httpResponseNode = mapper.readTree(EntityUtils.toString(httpResponse.getEntity()));
-          authoriseResponse = mapper.readValue(httpResponseNode.get("data").asText(), AuthoriseResponse.class);
+          String httpResponseStr = new String();
+          httpResponseStr = EntityUtils.toString(httpResponse.getEntity(), "utf-8");
+          JsonNode httpResponseNode = mapper.readTree(httpResponseStr);
+          authoriseResponse = mapper.readValue(httpResponseNode.get("data").toString(), AuthoriseResponse.class);
           return authoriseResponse;
         } else {
           throw new AuthenticationException("MessageX Authentication Failed");
@@ -61,6 +64,7 @@ public class Messagex {
       } catch (ClientProtocolException ex) {
         throw ex;
       } catch (IOException ex) {
+        ex.printStackTrace();
         throw ex;
       }
     } catch (UnsupportedEncodingException ex) {
@@ -81,6 +85,7 @@ public class Messagex {
         } catch (JsonProcessingException ex) {
           throw ex;
         }
+        System.out.println(messagexOptions.getBaseUrl() + "/api/mail/send");
         HttpPost httpRequest = new HttpPost(messagexOptions.getBaseUrl() + "/api/mail/send");
         httpRequest.setHeader("Content-Type", "application/json");
         httpRequest.setHeader("Authorization", "Bearer " + bearerToken);
@@ -106,6 +111,10 @@ public class Messagex {
       }
     }
     throw new MailSendException("bearerToken is mandatory for sending emails");
+  }
+
+  public MessagexOptions getMessagexOptions() {
+    return this.messagexOptions;
   }
 
 }
