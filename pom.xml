@@ -7,12 +7,12 @@
 	<packaging>jar</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>MessageX</name>
+	<description>The JAVA SDK for integrating the MessageX mail send API with your java project.</description>
 	<url>https://github.com/messagex/java-messagex</url>
 	<scm>
-		<connection>scm:git:https://github.com/messagex/java-messagex.git</connection>
-		<developerConnection>scm:git:https://github.com/messagex/java-messagex.git</developerConnection>
-		<url>git@github.com/messagex/java-messagex.git</url>
-		<tag>1.0.0</tag>
+		<connection>scm:git:github.com/messagex/java-messagex.git</connection>
+		<developerConnection>scm:git:github.com/messagex/java-messagex.git</developerConnection>
+		<url>https://github.com/messagex/java-messagex/tree/master</url>
 	</scm>
 	<!--License -->
 	<licenses>
@@ -116,7 +116,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>3.2.0</version>
+				<configuration>
+					<source>8</source>
+					<detectJavaApiLink>false</detectJavaApiLink>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>

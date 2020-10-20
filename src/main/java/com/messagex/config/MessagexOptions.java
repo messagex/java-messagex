@@ -1,5 +1,9 @@
 package com.messagex.config;
 
+/**
+ * MessageXOptions is the configuration entity used for accessing the MessageX API.
+ * @author Saurabh Raje
+ */
 public class MessagexOptions {
   private static String defaultBaseUrl ="http://api.messagex.test:8080";
   private static String defaultApiKey = (System.getenv("MESSAGEX_API_KEY") != null) ? System.getenv("MESSAGEX_API_KEY") : null;
@@ -9,12 +13,20 @@ public class MessagexOptions {
   private String apiKey;
   private String apiSecret;
 
+  /**
+   * Class Constructor with default values.
+   */
   public MessagexOptions() {
     this.baseUrl = MessagexOptions.defaultBaseUrl;
     this.apiKey = MessagexOptions.defaultApiKey;
     this.apiSecret = MessagexOptions.defaultApiSecret;
   }
 
+  /**
+   * Class constructor with configurable API_KEY and API_SECRET.
+   * @param apiKey the API KEY available at messagex.com.
+   * @param apiSecret the API SECRET available at messagex.com.
+   */
   public MessagexOptions(String apiKey, String apiSecret) {
     // Validations
     if (null == apiKey || apiKey.equals("")) {
@@ -31,7 +43,10 @@ public class MessagexOptions {
 
   /**
    * This constructor is only for those clients that have a custom implementation of the
-   *   MessageX API and should not be used by others.
+   * MessageX API and should not be used by others.
+   * @param baseUrl the API URL provided at messagex.com.
+   * @param apiKey the API KEY available at messagex.com.
+   * @param apiSecret the API SECRET available at messagex.com.
    */
   public MessagexOptions(String baseUrl, String apiKey, String apiSecret) throws IllegalArgumentException {
     if (null == baseUrl || baseUrl.equals("")) {

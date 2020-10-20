@@ -119,15 +119,6 @@ public class Mail {
     this.analytics = analytics;
   }
 
-  /**
-   * Validator function
-   * Compulsory properties:
-   * from.address
-   * to.address
-   * subject
-   * replyTo.address
-   * content
-   */
   public Boolean validate() throws MailSendException {
     if (null == this.from || !this.from.validate()) {
       throw new InvalidContactException("The `from` email is invalid");

@@ -23,6 +23,10 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * MessageX is the main entity used to send emails via the MessageX API.
+ * @author Saurabh Raje
+ */
 public class Messagex {
   private static ObjectMapper mapper = new ObjectMapper();
 
@@ -32,10 +36,20 @@ public class Messagex {
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
+  /**
+   * Class Constructor.
+   * @param messagexOptions Configuration Options for the account.
+   */
   public Messagex(MessagexOptions messagexOptions) {
     this.messagexOptions = messagexOptions;
   }
 
+  /**
+   * Authenticate the user using the Oauth2.0 implementation.
+   * @return response received from
+   * @throws IOException thrown when the API resonse cannot be interpreted.
+   * @throws AuthenticationException thrown when authentication fails
+   */
   public AuthoriseResponse authenticate() throws IOException, AuthenticationException {
     CloseableHttpClient httpClient = HttpClients.createDefault();
     AuthoriseRequest authoriseRequest = new AuthoriseRequest(messagexOptions);
@@ -74,6 +88,14 @@ public class Messagex {
     }
   }
 
+  /**
+   * Used to send emails using the MessageX mail send API.
+   * @param bearerToken the bearerToken received as part of the AuthoriseResponse in the Authenticate request.
+   * @param mail the email object that defines what needs to be sent to the user.
+   * @return the API response received after attempting a mail send.
+   * @throws MailSendException thrown when mail send fails.
+   * @throws IOException thrown when the API Response cannot be interpreted.
+   */
   public MailSendResponse sendMail(String bearerToken, Mail mail) throws MailSendException, IOException {
     if (null != bearerToken && !bearerToken.isEmpty()) {
       CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -113,6 +135,10 @@ public class Messagex {
     throw new MailSendException("bearerToken is mandatory for sending emails");
   }
 
+  /**
+   * Get options used to configure the account.
+   * @return the configuration object.
+   */
   public MessagexOptions getMessagexOptions() {
     return this.messagexOptions;
   }
